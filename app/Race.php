@@ -10,7 +10,7 @@ class Race extends Model
     const STATUS_IN_PROGRESS = 'PROGRESS';
     const STATUS_COMPLETE = 'COMPLETE';
 
-    protected $table = 'race';
+    protected $table = 'races';
     public $timestamps = false;
 
     /**
@@ -29,6 +29,7 @@ class Race extends Model
     {
         if (sizeof($this->horses) < self::NUMBER_OF_HORSES) {
             $horse->race_id = $this->id;
+            $horse->save();
         } else {
             throw new \Exception('Limit for horses in one race is reached');
         }

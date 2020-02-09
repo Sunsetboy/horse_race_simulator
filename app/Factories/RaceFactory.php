@@ -29,6 +29,7 @@ class RaceFactory
 
             $horse->save();
         }
+        $race = $race->fresh();
 
         return $race;
     }

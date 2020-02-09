@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Horse extends Model
 {
-    protected $table = 'horse';
+    protected $table = 'horses';
     public $timestamps = false;
 
     public function __construct(array $attributes = [])
