@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Services\HorseService;
 use Illuminate\Database\Eloquent\Model;
 
 class Race extends Model
@@ -32,6 +33,27 @@ class Race extends Model
             $horse->save();
         } else {
             throw new \Exception('Limit for horses in one race is reached');
+        }
+    }
+
+    /**
+     * sets race status as COMPLETE, saves each horse finish time
+     */
+    public function markAsComplete()
+    {
+        if ($this->status == self::STATUS_COMPLETE) {
+            // already completed
+            return;
+        }
+
+        $this->status = self::STATUS_COMPLETE;
+        $this->save();
+
+        foreach ($this->horses as $horse) {
+            // lets save each horse finish time for getting statistics later
+            $horseService = new HorseService($horse);
+            $finishTime = $horseService->getTimeToFinish();
+            $horse->saveFinishTime($finishTime);
         }
     }
 

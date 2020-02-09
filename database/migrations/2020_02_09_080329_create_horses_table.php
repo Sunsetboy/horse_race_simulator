@@ -20,6 +20,7 @@ class CreateHorsesTable extends Migration
             $table->decimal('speed', 3, 1);
             $table->decimal('strength', 3, 1);
             $table->decimal('endurance', 3, 1);
+            $table->float('finish_time')->nullable(true)->default(null);
         });
     }
 
