@@ -3,6 +3,7 @@
 
 namespace App\Services;
 
+use App\Game;
 use App\Horse;
 
 /**
@@ -28,7 +29,11 @@ class HorseService
      */
     public function getTimeToFinish(): float
     {
+        $distanceOnBestSpeed = $this->getDistanceOnBestSpeed();
+        $bestSpeed = $this->getBestSpeed();
+        $speedReduce = $this->getSpeedReduce();
 
+        return (Game::RACE_DISTANCE - $distanceOnBestSpeed) / ($bestSpeed - $speedReduce) + $distanceOnBestSpeed / $bestSpeed;
     }
 
     /**
@@ -38,7 +43,16 @@ class HorseService
      */
     public function getCoveredDistance($secondsFromRaceStart): int
     {
+        $distanceOnBestSpeed = $this->getDistanceOnBestSpeed();
+        $timeOnBestSpeed = $distanceOnBestSpeed / $this->getBestSpeed();
 
+        if ($secondsFromRaceStart <= $timeOnBestSpeed) {
+            $distanceCovered = $secondsFromRaceStart * $this->getBestSpeed();
+        } else {
+            $distanceCovered = $distanceOnBestSpeed + ($secondsFromRaceStart - $timeOnBestSpeed) * ($this->getBestSpeed() - $this->getSpeedReduce());
+        }
+
+        return ($distanceCovered <= Game::RACE_DISTANCE) ? $distanceCovered : Game::RACE_DISTANCE;
     }
 
     /**

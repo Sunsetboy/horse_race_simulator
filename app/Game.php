@@ -7,6 +7,7 @@ use App\Factories\RaceFactory;
 class Game
 {
     const RACES_LIMIT = 3;
+    const RACE_DISTANCE = 1500;
 
     private $races = [];
 
