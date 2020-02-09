@@ -27,6 +27,6 @@ class CreateRacesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('race');
+        Schema::dropIfExists('races');
     }
 }

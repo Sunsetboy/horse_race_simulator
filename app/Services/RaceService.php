@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Game;
+use App\Horse;
 use App\Race;
 
 class RaceService
@@ -23,9 +24,10 @@ class RaceService
 
     /**
      * @param integer $timestamp
+     * @return array
      * @throws \Exception
      */
-    public function calculateCurrentRaceStatus($timestamp)
+    public function calculateCurrentRaceStatus($timestamp): array
     {
         $durationOfRace = $timestamp - $this->race->start_ts;
         if ($durationOfRace < 0) {
@@ -43,8 +45,51 @@ class RaceService
             }
         }
 
+        $horsesPositions = $this->getHorsesPositions($timestamp);
+
         if ($numberOfHorsesFinished == sizeof($this->race->horses)) {
             $this->race->markAsComplete();
         }
+
+        return $horsesCoveredDistance;
+    }
+
+    /**
+     * returns an array of horses indexed by their positions (starts from index zero)
+     * @param $timestamp
+     * @return Horse[]
+     */
+    protected function getHorsesPositions($timestamp): array
+    {
+        $horsesPositions = [];
+
+        $horsesFinished = []; // we will compare them by time to finish
+        $horsesNotFinished = []; // we will compare them by covered distance
+
+        $durationOfRace = $timestamp - $this->race->start_ts;
+
+        foreach ($this->horses as $horse) {
+            $horseService = new HorseService($horse);
+            $horseTimeToFinish = $horseService->getTimeToFinish();
+            $horseDistance = $horseService->getCoveredDistance($durationOfRace);
+
+            if ($horseTimeToFinish <= $durationOfRace) {
+                $horsesFinished[$horse->id] = $horseTimeToFinish;
+            } else {
+                $horsesNotFinished[$horse->id] = $horseDistance;
+            }
+        }
+
+        asort($horsesFinished);
+        asort($horsesNotFinished);
+
+        foreach ($horsesFinished as $finishedHorse) {
+            $horsesPositions[] = $finishedHorse;
+        }
+        foreach ($horsesNotFinished as $notFinishedHorse) {
+            $horsesPositions[] = $notFinishedHorse;
+        }
+
+        return $horsesPositions;
     }
 }

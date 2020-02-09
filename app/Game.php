@@ -24,12 +24,16 @@ class Game
     public function createRaces()
     {
         $raceFactory = new RaceFactory();
+        $currentNumberOfActiveRaces = $this->getNumberOfCurrentRaces();
 
-        for ($i = 0; $i < self::RACES_LIMIT - $this->getNumberOfCurrentRaces(); $i++) {
+        for ($i = 0; $i < self::RACES_LIMIT - $currentNumberOfActiveRaces; $i++) {
             $this->races[] = $raceFactory->create();
         }
     }
 
+    /**
+     * @return int
+     */
     protected function getNumberOfCurrentRaces(): int
     {
         $currentRacesNumber = 0;
