@@ -9,12 +9,7 @@ class Horse extends Model
     protected $table = 'horses';
     public $timestamps = false;
 
-    public function __construct(array $attributes = [])
-    {
-        parent::__construct($attributes);
-
-        $this->strength = mt_rand(0, 100) / 10;
-        $this->speed = mt_rand(0, 100) / 10;
-        $this->endurance = mt_rand(0, 100) / 10;
-    }
+    const BASE_SPEED = 5;
+    const BASE_SPEED_REDUCE_BY_JOKEY = 5;
+    const STRENGTH_COEFFICIENT = 8;
 }
