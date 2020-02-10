@@ -4,6 +4,8 @@
 namespace App\Dtos;
 
 
+use App\Race;
+
 class RaceStatisticsDto
 {
     /**
@@ -21,8 +23,14 @@ class RaceStatisticsDto
      */
     private $timestamp;
 
-    public function __construct($timestamp, $coveredDistances, $positions)
+    /**
+     * @var Race $race
+     */
+    private $race;
+
+    public function __construct(Race $race, $timestamp, array $coveredDistances, array $positions)
     {
+        $this->race = $race;
         $this->timestamp = $timestamp;
         $this->coveredDistances = $coveredDistances;
         $this->positions = $positions;
@@ -51,4 +59,13 @@ class RaceStatisticsDto
     {
         return $this->timestamp;
     }
+
+    /**
+     * @return Race
+     */
+    public function getRace(): Race
+    {
+        return $this->race;
+    }
+
 }

@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Dtos\RaceStatisticsDto;
 use App\Game;
 use App\Horse;
 use App\Race;
@@ -24,10 +25,10 @@ class RaceService
 
     /**
      * @param integer $timestamp
-     * @return array
+     * @return RaceStatisticsDto
      * @throws \Exception
      */
-    public function calculateCurrentRaceStatus($timestamp): array
+    public function calculateCurrentRaceStatus($timestamp): RaceStatisticsDto
     {
         $durationOfRace = $timestamp - $this->race->start_ts;
         if ($durationOfRace < 0) {
@@ -51,7 +52,7 @@ class RaceService
             $this->race->markAsComplete();
         }
 
-        return $horsesCoveredDistance;
+        return new RaceStatisticsDto($this->race, $timestamp, $horsesCoveredDistance, $horsesPositions);
     }
 
     /**
