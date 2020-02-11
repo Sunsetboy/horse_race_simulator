@@ -50,7 +50,7 @@ class RaceService
 
         $horsesPositions = $this->getHorsesPositions($timestamp);
 
-        if ($numberOfHorsesFinished == sizeof($this->race->horses)) {
+        if ($this->race->status == Race::STATUS_IN_PROGRESS && $numberOfHorsesFinished == sizeof($this->race->horses)) {
             $this->race->markAsComplete();
         }
 

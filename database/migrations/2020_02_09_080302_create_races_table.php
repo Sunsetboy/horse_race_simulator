@@ -16,7 +16,7 @@ class CreateRacesTable extends Migration
         Schema::create('races', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->enum('status', ['PROGRESS', 'COMPLETE']);
-            $table->timestamp('start_ts');
+            $table->dateTime('start_ts')->nullable(false);
         });
     }
 

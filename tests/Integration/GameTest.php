@@ -21,7 +21,7 @@ class GameTest extends TestCase
     {
         $game = new Game();
 
-        $game->createRaces();
+        $game->createRaces(10);
 
         $this->assertDatabaseHas('races', []);
 
@@ -35,13 +35,25 @@ class GameTest extends TestCase
     /**
      * @test
      */
+    public function create_one_race_when_no_active_races_exist()
+    {
+        $game = new Game();
+
+        $game->createRaces(1);
+        $races = Race::all();
+        $this->assertEquals(1, sizeof($races));
+    }
+
+    /**
+     * @test
+     */
     public function create_new_races_when_active_races_exist()
     {
         $raceFactory = new RaceFactory();
         $raceFactory->create();
 
         $game = new Game();
-        $game->createRaces();
+        $game->createRaces(10);
         $races = Race::all();
 
         $this->assertEquals(Game::RACES_LIMIT, sizeof($races));

@@ -7,7 +7,6 @@ use App\Helpers\FakeTime;
 use App\Horse;
 use App\Race;
 use App\Services\RaceService;
-use Illuminate\Http\Request;
 
 class GameController extends Controller
 {
@@ -22,7 +21,6 @@ class GameController extends Controller
             $currentRacesStats[$raceNumber] = (new RaceService($currentRace))->calculateCurrentRaceStatus($currentTimeStamp);
         }
 
-//        dd($currentRacesStats);
         // get last 5 races results
         $lastCompletedRacesStats = [];
         $lastThreeCompletedRaces = Race::where('status', Race::STATUS_COMPLETE)
@@ -32,12 +30,8 @@ class GameController extends Controller
             $lastCompletedRacesStats[$raceNumber] = (new RaceService($completedRace))->calculateCurrentRaceStatus($currentTimeStamp);
         }
 
-//        dd($lastCompletedRacesStats);
-
         // get the best ever time
-
         $bestHorseEver = Horse::where('finish_time', '>', 0)->orderBy('finish_time', 'asc')->first();
-//        dd($bestHorseEver);
 
         $currentDateTime = FakeTime::getInstance()->getDateTime()->format('Y-m-d H:i:s');
 
@@ -59,7 +53,7 @@ class GameController extends Controller
 
     public function progress()
     {
-        FakeTime::getInstance()->increment(10);
+        FakeTime::getInstance()->increment(60);
 
         return redirect('/');
     }
