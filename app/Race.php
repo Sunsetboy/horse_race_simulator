@@ -14,6 +14,8 @@ class Race extends Model
     protected $table = 'races';
     public $timestamps = false;
 
+    protected $guarded = ['start_ts'];
+
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */

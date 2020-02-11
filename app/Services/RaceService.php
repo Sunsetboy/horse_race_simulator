@@ -35,10 +35,12 @@ class RaceService
             throw new \Exception('incorrect timestamp: the race started in future?');
         }
 
+        $horsesById = [];
         $horsesCoveredDistance = [];
         $numberOfHorsesFinished = 0;
 
         foreach ($this->race->horses as $horse) {
+            $horsesById[$horse->id] = $horse;
             $horseService = new HorseService($horse);
             $horsesCoveredDistance[$horse->id] = $horseService->getCoveredDistance($durationOfRace);
             if ($horsesCoveredDistance[$horse->id] == Game::RACE_DISTANCE) {
@@ -52,7 +54,7 @@ class RaceService
             $this->race->markAsComplete();
         }
 
-        return new RaceStatisticsDto($this->race, $timestamp, $horsesCoveredDistance, $horsesPositions);
+        return new RaceStatisticsDto($this->race, $timestamp, $horsesCoveredDistance, $horsesPositions, $horsesById);
     }
 
     /**
@@ -83,7 +85,7 @@ class RaceService
         }
 
         asort($horsesFinished);
-        asort($horsesNotFinished);
+        arsort($horsesNotFinished);
 
         foreach ($horsesFinished as $horseId => $finishedHorse) {
             $horsesPositions[] = $horseId;
