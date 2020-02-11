@@ -30,9 +30,9 @@ class RaceService
      */
     public function calculateCurrentRaceStatus($timestamp): RaceStatisticsDto
     {
-        $durationOfRace = $timestamp - $this->race->start_ts;
+        $durationOfRace = $timestamp - (new \DateTime($this->race->start_ts))->getTimestamp();
         if ($durationOfRace < 0) {
-            throw new \Exception('incorrect timestamp');
+            throw new \Exception('incorrect timestamp: the race started in future?');
         }
 
         $horsesCoveredDistance = [];
@@ -59,6 +59,7 @@ class RaceService
      * returns an array of horses indexed by their positions (starts from index zero)
      * @param $timestamp
      * @return Horse[]
+     * @throws \Exception
      */
     protected function getHorsesPositions($timestamp): array
     {
@@ -67,9 +68,9 @@ class RaceService
         $horsesFinished = []; // we will compare them by time to finish
         $horsesNotFinished = []; // we will compare them by covered distance
 
-        $durationOfRace = $timestamp - $this->race->start_ts;
+        $durationOfRace = $timestamp - (new \DateTime($this->race->start_ts))->getTimestamp();
 
-        foreach ($this->horses as $horse) {
+        foreach ($this->race->horses as $horse) {
             $horseService = new HorseService($horse);
             $horseTimeToFinish = $horseService->getTimeToFinish();
             $horseDistance = $horseService->getCoveredDistance($durationOfRace);
@@ -84,11 +85,11 @@ class RaceService
         asort($horsesFinished);
         asort($horsesNotFinished);
 
-        foreach ($horsesFinished as $finishedHorse) {
-            $horsesPositions[] = $finishedHorse;
+        foreach ($horsesFinished as $horseId => $finishedHorse) {
+            $horsesPositions[] = $horseId;
         }
-        foreach ($horsesNotFinished as $notFinishedHorse) {
-            $horsesPositions[] = $notFinishedHorse;
+        foreach ($horsesNotFinished as $horseId => $notFinishedHorse) {
+            $horsesPositions[] = $horseId;
         }
 
         return $horsesPositions;

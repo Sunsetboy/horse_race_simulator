@@ -3,6 +3,7 @@
 
 namespace App\Factories;
 
+use App\Helpers\FakeTime;
 use App\Race;
 
 class RaceFactory
@@ -14,7 +15,7 @@ class RaceFactory
     {
         $race = new Race();
         $race->status = Race::STATUS_IN_PROGRESS;
-        $race->start_ts = time();
+        $race->start_ts = FakeTime::getInstance()->getDateTime()->format('Y-m-d H:i:s');
         $race->save();
 
         $horseFactory = new HorseFactory();

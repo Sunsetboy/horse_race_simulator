@@ -11,6 +11,8 @@
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', 'GameController@index');
+
+Route::post('/race', 'GameController@create');
+
+Route::post('/progress', 'GameController@progress');

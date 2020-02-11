@@ -20,13 +20,17 @@ class Game
 
     /**
      * Creates new races and starts them
+     * @param int $numberOfRaces
      */
-    public function createRaces()
+    public function createRaces($numberOfRaces = 1)
     {
         $raceFactory = new RaceFactory();
         $currentNumberOfActiveRaces = $this->getNumberOfCurrentRaces();
 
-        for ($i = 0; $i < self::RACES_LIMIT - $currentNumberOfActiveRaces; $i++) {
+        $numberOfRaces = ($numberOfRaces <= self::RACES_LIMIT - $currentNumberOfActiveRaces) ?
+            $numberOfRaces :
+            self::RACES_LIMIT - $currentNumberOfActiveRaces;
+        for ($i = 0; $i < $numberOfRaces; $i++) {
             $this->races[] = $raceFactory->create();
         }
     }

@@ -3,6 +3,8 @@
 
 namespace App\Helpers;
 
+use DateTime;
+
 /**
  * Helper to simulate time going
  * Class FakeTime
@@ -26,7 +28,7 @@ class FakeTime
             $this->currentTimeStamp = time();
             file_put_contents(self::getFilePath(), $this->currentTimeStamp);
         } else {
-            $this->currentTimeStamp = file_get_contents(self::getFilePath());
+            $this->currentTimeStamp = (int)file_get_contents(self::getFilePath());
         }
     }
 
@@ -57,6 +59,15 @@ class FakeTime
     public function get()
     {
         return $this->currentTimeStamp;
+    }
+
+    /**
+     * @return DateTime
+     * @throws \Exception
+     */
+    public function getDateTime(): DateTime
+    {
+        return (new DateTime())->setTimestamp($this->currentTimeStamp);
     }
 
     /**
